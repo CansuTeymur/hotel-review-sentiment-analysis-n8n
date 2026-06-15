@@ -1,0 +1,241 @@
+{
+  "name": "Sentiment Analysis",
+  "nodes": [
+    {
+      "parameters": {
+        "formTitle": "Feedback",
+        "formDescription": "Please share your feedback",
+        "formFields": {
+          "values": [
+            {
+              "fieldLabel": "What is your name?",
+              "fieldName": "Name",
+              "placeholder": "Your name"
+            },
+            {
+              "fieldLabel": "What is your feedback?",
+              "fieldType": "textarea",
+              "fieldName": "Feedback",
+              "placeholder": "Type your review"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.formTrigger",
+      "typeVersion": 2.6,
+      "position": [
+        0,
+        0
+      ],
+      "id": "68ae143b-dbb4-4bbe-a5c9-88ccd77ef687",
+      "name": "On form submission",
+      "webhookId": "1d1cc74a-2743-4613-abfb-63bf21a8d6b6"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json.Feedback }}",
+        "messages": {
+          "messageValues": [
+            {
+              "message": "=You are a sentiment analysis assistant. Classify the sentiment of the following hotel review as one of these categories:\n\n- Positive\n- Negative\n- Neutral\n\nOnly return the category name, nothing else."
+            }
+          ]
+        },
+        "batching": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.chainLlm",
+      "typeVersion": 1.9,
+      "position": [
+        288,
+        96
+      ],
+      "id": "a5aeda98-1c7c-4566-8cce-867e250f08e7",
+      "name": "Basic LLM Chain"
+    },
+    {
+      "parameters": {
+        "model": "=llama3.2",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOllama",
+      "typeVersion": 1,
+      "position": [
+        272,
+        336
+      ],
+      "id": "c346fcd1-273d-4ca4-bf16-6914f32c9d64",
+      "name": "Ollama Chat Model",
+      "credentials": {
+        "ollamaApi": {
+          "id": "h5l86DkKq1I6mbAc",
+          "name": "Ollama account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "mode": "combine",
+        "combineBy": "combineByPosition",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.2,
+      "position": [
+        624,
+        -64
+      ],
+      "id": "4e89a887-846f-41ca-804a-041ad906fd0e",
+      "name": "Merge"
+    },
+    {
+      "parameters": {
+        "operation": "create",
+        "base": {
+          "__rl": true,
+          "value": "appF8Yjs2zWsUmNIL",
+          "mode": "list",
+          "cachedResultName": "n8n-Demo",
+          "cachedResultUrl": "https://airtable.com/appF8Yjs2zWsUmNIL"
+        },
+        "table": {
+          "__rl": true,
+          "value": "tblIo1ls7j6MY2tPP",
+          "mode": "list",
+          "cachedResultName": "sentiment",
+          "cachedResultUrl": "https://airtable.com/appF8Yjs2zWsUmNIL/tblIo1ls7j6MY2tPP"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Name": "={{ $json.Name }}",
+            "sentiment": "={{ $json.text }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "Name",
+              "displayName": "Name",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "sentiment",
+              "displayName": "sentiment",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "options",
+              "options": [
+                {
+                  "name": "Positive",
+                  "value": "Positive"
+                },
+                {
+                  "name": "Negative ",
+                  "value": "Negative "
+                },
+                {
+                  "name": "Neutral",
+                  "value": "Neutral"
+                }
+              ],
+              "readOnly": false,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.airtable",
+      "typeVersion": 2.2,
+      "position": [
+        832,
+        -64
+      ],
+      "id": "bcbecf34-ec01-4365-a395-8f51a7b99051",
+      "name": "Create a record",
+      "credentials": {
+        "airtableTokenApi": {
+          "id": "E1zOUUibcxCoHHLz",
+          "name": "Airtable Personal Access Token account 5"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "On form submission": {
+      "main": [
+        [
+          {
+            "node": "Basic LLM Chain",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Ollama Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Basic LLM Chain",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Basic LLM Chain": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Merge": {
+      "main": [
+        [
+          {
+            "node": "Create a record",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "availableInMCP": false
+  },
+  "versionId": "0c6e8ff1-084c-4ec1-8d2a-78d470dd237a",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "9bd80aec801b6357dc221caa7ca76b24200c10080efd83fc32f190198c3cb32c"
+  },
+  "nodeGroups": [],
+  "id": "6Dwz23lSdIiMcGJE",
+  "tags": []
+}
