@@ -1,7 +1,7 @@
 # Hotel Review Sentiment Analysis Automation
 
 ### Form Input
-![Form](form.png)
+![Form](form.jpeg)
 
 ### Workflow
 ![Workflow](workflow.png)
