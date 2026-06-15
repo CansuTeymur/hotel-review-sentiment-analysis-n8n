@@ -1,5 +1,7 @@
 # Hotel Review Sentiment Analysis Automation
 
+![Workflow](workflow.png)
+
 ## Overview
 
 This project is an AI-powered workflow built with n8n, Ollama, and Airtable. The workflow collects hotel reviews through a form, analyzes the sentiment using a local AI model, and automatically stores the results in Airtable.
