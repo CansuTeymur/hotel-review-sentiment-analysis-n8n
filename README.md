@@ -35,20 +35,3 @@ This project is an AI-powered workflow built with n8n, Ollama, and Airtable. The
 **Sentiment:**
 Positive
 
-## Learning Outcomes
-
-Through this project, I gained hands-on experience with:
-
-* Workflow automation using n8n
-* Integrating local AI models with Ollama
-* Prompt engineering
-* Data processing and merging
-* Database integration with Airtable
-
-## Future Improvements
-
-* Sentiment scoring
-* Automated email notifications
-* Analytics dashboard
-* Review categorization
-* AI-generated review summaries
