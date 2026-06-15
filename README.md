@@ -1,6 +1,13 @@
 # Hotel Review Sentiment Analysis Automation
 
+### Form Input
+![Form](form.png)
+
+### Workflow
 ![Workflow](workflow.png)
+
+### Database Output (Airtable)
+![Airtable](airtable.png)
 
 ## Overview
 
